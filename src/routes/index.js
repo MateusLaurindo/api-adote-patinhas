@@ -1,15 +1,17 @@
 import express from "express";
-import express from "./jogosRoutes.js";
+import pet from "./petRoutes.js";
+import user from "./userRoutes.js";
 
 const routes = (app) => {
     app.route('/').get((req, res) => {
-        res.status(200).send({titulo: "aprendendo node"});
+        res.status(200).send({ titulo: "Adote Patinhas" });
     })
     app.use(
         express.json(),
-        jogos
+        pet,
+        user
     )
-    
+
 }
 
 export default routes
