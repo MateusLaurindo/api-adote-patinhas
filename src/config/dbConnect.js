@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-//conexão com banco
+
 
 mongoose.connect("mongodb+srv://mateuslmoraeslima5:h5t43z1mamsJjMsk@cluster0.8rgmkoo.mongodb.net/?retryWrites=true&w=majority");
 
