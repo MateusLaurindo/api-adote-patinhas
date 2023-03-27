@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+//const { Schema } = mongoose;
+
 const userSchema = new mongoose.Schema(
     {
         nome: {type: String, require: true},
@@ -7,7 +9,8 @@ const userSchema = new mongoose.Schema(
         senha: {type: String, require: true},
         telefone: {type: Number, required: true},
         foto: {type: String, required: true},
-        pet: {type: mongoose.Schema.Types.ObjectId, ref: "pet", required: true}
+
+        // pet: {type: mongoose.Schema.Types.ObjectId, ref: "pet", required: true}
     },
 
     {
@@ -19,3 +22,9 @@ const userSchema = new mongoose.Schema(
 const user = mongoose.model("user", userSchema);
 
 export default user;
+
+/*module.exports = {
+    user,
+    userSchema
+}*/
+

@@ -1,61 +1,119 @@
-import user from "../models/user.js";
+import user from "../models/user.js"
 
 class UserController {
-    static listUsers = (req, res) => {
-        user.find((err, user) => {
-            res.status(200).json(user)
-        })
-    }
-    static registerUser = (req, res) => {
-        let newUser = new user(req.body);
+    static listUsers = async (req, res) => {
+        try {
+            const users = await user.find()
 
-        newUser.save((err) => {
-            if (err) {
-                res.status(500).send({ message: `${err.message} - falha ao cadastrar o usuário!` });
-            }
-            else {
-                res.status(201).send(newUser.toJSON())
-            }
-        })
+            res.status(200).json(users)
+        } catch (error) {
+            res.status(500).json({ error: error })
+        }
     }
-    static updateUser = (req, res) => {
+
+    static registerUser = async (req, res) => {
+
+        try {
+
+            const userId = {
+                nome: req.body.nome,
+                email: req.body.email,
+                senha: req.body.senha,
+                telefone: req.body.telefone,
+                foto: req.body.foto
+            }
+
+            const response = await user.create(userId)
+            res.status(201).json({ msg: 'usuário cadastrado com sucesso!'});
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+    static updateUser = async (req, res) => {
+
+
+        try {
+            const id = req.params.id;
+
+            const userId = {
+                nome: req.body.nome,
+                email: req.body.email,
+                senha: req.body.senha,
+                telefone: req.body.telefone,
+                foto: req.body.foto
+
+            }
+
+            const userUpdate = await user.findByIdAndUpdate(id, userId)
+
+
+            if (!userUpdate) {
+                res.status(404).json({ msg: "Usuario não encontrado" })
+                return;
+            }
+
+
+            res.status(200).json({ message: `usuário atualizado com sucesso!` });
+        }
+        catch (error) {
+            
+            console.log(error)
+        }
+
+    }
+    static listUserById = async (req, res) => {
         const id = req.params.id;
 
-        user.findByIdAndUpdate(id, { $set: req.body }, (err) => {
-            if (!err) {
-                res.status(200).send({ message: `usuário atualizado com sucesso!` });
-            }
-            else {
-                res.status(500).send({ message: err.message });
-            }
-        })
-    }
-    static listUserById = (req, res) => {
-        const id = req.params.id;
 
-        user.findById(id, (err, user) => {
-            if (err) {
-                res.status(400).send({ message: `${err.message} - id da do usuário não encontrado!` });
+        try {
+            const userId = await user.findOne({ _id: id })
+
+            if (!userId) {
+                res.status(422).json({ message: `${err.message} - id do usuário não encontrado!` });
+                return
             }
-            else {
-                res.status(200).send(user);
+            res.status(200).json(userId);
+        }
+        catch (error) {
+            res.status(500).json({ error: error })
+        }
+
+
+    }
+    static removeUser = async (req, res) => {
+        try  {
+            const id = req.params.id;
+
+            const userId = await user.findById(id)
+
+            if(!userId) {
+                res.status(404).json({msg: 'id do usuário não encontrado!'})
+                return
             }
 
-        })
+        const deleteUser = await user.findByIdAndDelete(id);
+        res.status(200).json({deleteUser, msg: 'usuário removido com sucesso!'})
+        }
+        catch (error) {
+            
+            console.log(error)
+        }
     }
-    static removeUser = (req, res) => {
-        const id = req.params.id;
-
-        user.findByIdAndDelete(id, (err) => {
-            if (!err) {
-                res.status(200).send({ message: `usuário removido com sucesso!` });
-            }
-            else {
-                res.status(500).send({ message: err.message });
-            }
-        })
-    }
+    
 
 }
 
 export default UserController;
+
+
+/*
+
+{
+    "nome": "bernardinho",
+    "email": "bernardinhodograu08@gmail.com",
+    "senha": "12309",
+    "telefone": 40028922 ,
+    "foto": "fotom2i59nh451a"
+}
+*/

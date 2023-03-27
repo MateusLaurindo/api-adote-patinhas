@@ -1,6 +1,6 @@
 import express from "express";
-import pet from "./petRoutes.js";
-import user from "./userRoutes.js";
+import petRoutes from "./petRoutes.js";
+import userRoutes from "./userRoutes.js";
 
 const routes = (app) => {
     app.route('/').get((req, res) => {
@@ -8,8 +8,8 @@ const routes = (app) => {
     })
     app.use(
         express.json(),
-        pet,
-        user
+        petRoutes,
+        userRoutes
     )
 
 }
